@@ -35,7 +35,7 @@ namespace GammelGames
                     answer = answer + Convert.ToChar(b[i]);
                 }
 
-                if (answer == "Steam-Server")
+                if (answer == "Gammliger-Server")
                 {
                     return true;
                 }
