@@ -12,6 +12,7 @@ namespace GammelGames
         string Name;
         string NickName;
         string Email;
+        Enumerationen.EnmSpielerZustand Status;
 
 
         /// <summary>
@@ -27,6 +28,8 @@ namespace GammelGames
             Name = pName;
             NickName = pNickName;
             Email = pEmail;
+            Status = Enumerationen.EnmSpielerZustand.eOnline;
+
         }
     }
 }
