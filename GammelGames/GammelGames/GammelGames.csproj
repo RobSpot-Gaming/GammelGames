@@ -68,6 +68,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -81,6 +82,39 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\controller.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\controller1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\community.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\community2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\community1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Joystick-512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\games.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\account.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
