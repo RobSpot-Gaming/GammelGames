@@ -27,7 +27,7 @@ namespace Server
             executeQuarry(pCommand);
 
             conn.ChangeDatabase(datenbankName);
-            pCommand = "CREATE TABLE User(UserID int NOT NULL, UserName varchar(50);";
+            pCommand = "CREATE TABLE User(UserID int NOT NULL, UserName varchar(50), UserPassword varchar(64));";
 
             executeQuarry(pCommand);
         }
