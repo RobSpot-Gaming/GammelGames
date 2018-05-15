@@ -20,6 +20,18 @@ namespace Server
             conn = new MySqlConnection(ConnectionString); //  "Data Source = localhost; Database = stasibot; Uid = levelbot; Pwd = MhsUgUeuQuqadAlh;" 
             datenbankName = DatenbankName;
         }
+
+        private void createDatabase()
+        {
+            string pCommand = "CREATE DATABASE " + datenbankName + ";";
+            executeQuarry(pCommand);
+
+            conn.ChangeDatabase(datenbankName);
+            pCommand = "CREATE TABLE User(UserID int NOT NULL, UserName varchar(50);";
+
+            executeQuarry(pCommand);
+        }
+
         private Int32 select(Int32 ClientID)
         {
             string pCommand = "SELECT ClientTime FROM " + datenbankName + " WHERE ClientID = " + ClientID;
