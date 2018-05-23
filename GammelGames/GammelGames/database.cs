@@ -32,6 +32,13 @@ namespace Server
             executeQuarry(pCommand);
         }
 
+        public Boolean login(string pUsername, string p_Password)
+        {
+            string pCommand = "SELECT UserID From " + datenbankName + " Where ClientName = " + pUsername + " AND ClientPassword = " + p_Password + ";";
+            return executeReader(pCommand) > 0;
+        }
+
+        /*
         private Int32 select(Int32 ClientID)
         {
             string pCommand = "SELECT ClientTime FROM " + datenbankName + " WHERE ClientID = " + ClientID;
@@ -59,7 +66,7 @@ namespace Server
             string pCommand = "UPDATE " + datenbankName + " SET ClientTime = " + Zeit + " WHERE ClientID = " + ClientID;
             return executeQuarry(pCommand);
         }
-
+        */
 
         private Int32 executeQuarry(string sCommand)
         {
