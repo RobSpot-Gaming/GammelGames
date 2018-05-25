@@ -16,13 +16,14 @@ namespace GammelGames
         private string passwort;
 
         public Steuerung()
-        {
+        { 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             dieOberflaeche = new Anmeldung(this);
             dieOberflaeche.Show();
-            
+
+            dieDatabase = new database();
         }
 
         public Boolean anmelden(string pNickname, string pPassword)
@@ -37,7 +38,7 @@ namespace GammelGames
 
         public void registrieren(string pNickname, string pPassword)
         {
-
+            
         }
 
         public void angemeldet()

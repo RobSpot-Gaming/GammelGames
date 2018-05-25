@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
 namespace GammelGames
@@ -14,11 +15,14 @@ namespace GammelGames
 
         private string datenbankName;
         private MySqlConnection conn;
-        public database(string ConnectionString, string DatenbankName)
+        public database(/*string ConnectionString, string DatenbankName*/)
         {
             //create a MySQL connection with a query string 
-            conn = new MySqlConnection(ConnectionString); //  "Data Source = localhost; Database = stasibot; Uid = levelbot; Pwd = MhsUgUeuQuqadAlh;" 
-            datenbankName = DatenbankName;
+            /*conn = new MySqlConnection(ConnectionString); //  "Data Source = localhost; Database = stasibot; Uid = levelbot; Pwd = MhsUgUeuQuqadAlh;" 
+            datenbankName = DatenbankName;*/
+            datenbankName = "GammelGames";
+            conn = new MySqlConnection("Database=StasiBot;Data Source=localhost;User Id = root;");//Database=StasiBot;Data Source=localhost;User Id = root
+            createDatabase();
         }
 
         private void createDatabase()
@@ -26,8 +30,11 @@ namespace GammelGames
             string pCommand = "CREATE DATABASE " + datenbankName + ";";
             executeQuarry(pCommand);
 
+            
+            conn.Open();
             conn.ChangeDatabase(datenbankName);
-            pCommand = "CREATE TABLE `" + datenbankName + "`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
+            conn.Close();
+            pCommand = "CREATE TABLE `User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
 
             executeQuarry(pCommand);
         }
@@ -86,23 +93,21 @@ namespace GammelGames
 
         private Int32 executeQuarry(string sCommand)
         {
+            Int32 anzahlZeilen = -1;
             try
             {
                 conn.Open();
+
+                MySqlCommand command = new MySqlCommand(sCommand, conn);
+                anzahlZeilen = command.ExecuteNonQuery();
+                conn.Close();
             }
             catch
             {
-                Console.WriteLine();
-                Console.WriteLine("!!!!!!Verbindung zur Datenbank nicht Möglich!!!!!!");
-                Console.WriteLine();
-                System.Threading.Thread.Sleep(3000);
-                Environment.Exit(0);
+                MessageBox.Show("keine Verbindung möglich!");
             }
 
 
-            MySqlCommand command = new MySqlCommand(sCommand, conn);
-            Int32 anzahlZeilen = command.ExecuteNonQuery();
-            conn.Close();
             return anzahlZeilen;
         }
 
@@ -118,11 +123,7 @@ namespace GammelGames
             }
             catch
             {
-                Console.WriteLine();
-                Console.WriteLine("!!!!!!Verbindung zur Datenbank nicht Möglich!!!!!!");
-                Console.WriteLine();
-                System.Threading.Thread.Sleep(3000);
-                Environment.Exit(0);
+                MessageBox.Show("keine Verbindung möglich!");
             }
 
 
