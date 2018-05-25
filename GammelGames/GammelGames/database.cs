@@ -27,15 +27,31 @@ namespace GammelGames
             executeQuarry(pCommand);
 
             conn.ChangeDatabase(datenbankName);
-            pCommand = "CREATE TABLE User(UserID int NOT NULL, UserName varchar(50), UserPassword varchar(64));";
+            pCommand = "CREATE TABLE `" + datenbankName + "`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
 
             executeQuarry(pCommand);
         }
 
-        public Boolean login(string pUsername, string p_Password)
+        public Boolean login(string pUsername, string pPassword)
         {
-            string pCommand = "SELECT UserID From " + datenbankName + " Where ClientName = " + pUsername + " AND ClientPassword = " + p_Password + ";";
+            string pCommand = "SELECT UserID From " + datenbankName + " Where UserName = " + pUsername + " AND UserPassword = " + pPassword + ";";
             return executeReader(pCommand) > 0;
+        }
+
+        public Boolean registrieren(string pUsername, string pPassword)
+        {
+            string pCommand = "SELECT UserID From " + datenbankName + " WHERE UserName = " + pUsername + ";";
+            if(executeReader(pCommand) > 0)
+            {
+                return false;
+            }
+            else
+            {
+                pCommand = "INSERT INTO" + datenbankName + " (UserID, UserName, UserPassword) VALUES ( NULL, " + pUsername + ", " + pPassword + ");";
+                executeQuarry(pCommand);
+                return true;
+            }
+
         }
 
         /*
