@@ -55,20 +55,20 @@ namespace GammelGames
 
         public Boolean login(string pUsername, string pPassword)
         {
-            string pCommand = "SELECT UserID From " + datenbankName + " Where UserName = " + pUsername + " AND UserPassword = " + pPassword + ";";
-            return executeReader(pCommand)[0] != "0";
+            string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "' AND UserPassword = '" + pPassword + "';";
+            return executeReader(pCommand).Length != 0;
         }
 
         public Boolean registrieren(string pUsername, string pPassword)
         {
-            string pCommand = "SELECT UserID From " + datenbankName + " WHERE UserName = " + pUsername + ";";
-            if (executeReader(pCommand)[0] == "0")
+            string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "';";
+            if (executeReader(pCommand).Length != 0)
             {
                 return false;
             }
             else
             {
-                pCommand = "INSERT INTO" + datenbankName + " (UserID, UserName, UserPassword) VALUES ( NULL, " + pUsername + ", " + pPassword + ");";
+                pCommand = "INSERT INTO User (UserID, UserName, UserPassword) VALUES ( NULL, '" + pUsername + "', '" + pPassword + "');";
                 executeQuarry(pCommand);
                 return true;
             }

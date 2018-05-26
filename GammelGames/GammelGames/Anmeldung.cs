@@ -37,7 +37,15 @@ namespace GammelGames
 
         private void btn_registrieren_Click(object sender, EventArgs e)
         {
-            dieSteuerung.registrieren(txt_nickname.Text, txt_passwort.Text);
+            if(dieSteuerung.registrieren(txt_nickname.Text, txt_passwort.Text))
+            {
+                dieSteuerung.angemeldet();
+                this.Dispose();
+            }
+            else
+            {
+                fehler("Nutzername schon vergeben.");
+            }
         }
 
         private void fehler(string pFehler)

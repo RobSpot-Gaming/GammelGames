@@ -32,13 +32,27 @@ namespace GammelGames
             {
                 name = pNickname;
                 passwort = pPassword;
+
+                return true;
             }
-            return true;
+            else
+            {
+                return false;
+            }
         }
 
-        public void registrieren(string pNickname, string pPassword)
+        public Boolean registrieren(string pNickname, string pPassword)
         {
-            
+            if(dieDatabase.registrieren(pNickname, pPassword))
+            {
+                name = pNickname;
+                passwort = pPassword;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void angemeldet()
