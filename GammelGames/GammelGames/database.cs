@@ -17,36 +17,35 @@ namespace GammelGames
         private MySqlConnection conn;
         public database(/*string ConnectionString, string DatenbankName*/)
         {
-            //create a MySQL connection with a query string 
-            /*conn = new MySqlConnection(ConnectionString); //  "Data Source = localhost; Database = stasibot; Uid = levelbot; Pwd = MhsUgUeuQuqadAlh;" 
-            datenbankName = DatenbankName;*/
-            datenbankName = "GammelGames";
-            conn = new MySqlConnection("Data Source=localhost;User Id = root; SslMode=none;");//Database=StasiBot;Data Source=localhost;User Id = root
+            datenbankName = "gammelgames";
+            conn = new MySqlConnection("Data Source=localhost;User Id = root; SslMode=none;"); //Verbindungsstring zur lokalen MySQL Datenbank, ohne ssl Verschlüsselung
             createDatabase();
         }
 
         private void createDatabase()
         {
             Boolean vorhanden = false;
-            string pCommand = "SHOW DATABASES;";
-            foreach (string dbname in executeReader(pCommand))
+            string pCommand = "SHOW DATABASES;";    // gib die namen der Databases zurück
+            foreach (string dbname in executeReader(pCommand))  // es wird geschaut, ob es eine Datenbank mit dem Namen "gammelgames" gibt
             {
                 if (dbname == datenbankName)
                 {
-                    pCommand = "CREATE DATABASE " + datenbankName + ";";
-                    executeQuarry(pCommand);
-
-                    conn.Open();
-                    conn.ChangeDatabase(datenbankName);
-                    conn.Close();
-                    pCommand = "CREATE TABLE `gammelgames`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
-
-                    executeQuarry(pCommand);
                     vorhanden = true;
                 }
             }
-            if(vorhanden == false)
+
+            if(vorhanden == false)  // falls nicht, wird eine Datenbank erstellt 
             {
+                pCommand = "CREATE DATABASE " + datenbankName + ";";
+                executeQuarry(pCommand);
+
+                conn.ChangeDatabase(datenbankName); // und in sie gewechselt
+                pCommand = "CREATE TABLE `" + datenbankName + "`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
+
+                executeQuarry(pCommand);
+            }
+            else
+            {                               // ansonsten nur gewechselt
                 conn.Open();
                 conn.ChangeDatabase(datenbankName);
                 conn.Close();
@@ -56,7 +55,7 @@ namespace GammelGames
         public Boolean login(string pUsername, string pPassword)
         {
             string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "' AND UserPassword = '" + pPassword + "';";
-            return executeReader(pCommand).Length != 0;
+            return executeReader(pCommand).Length != 0; // falls das Array keine Einträge hat, gibt es den benutzer nicht
         }
 
         public Boolean registrieren(string pUsername, string pPassword)
@@ -64,46 +63,16 @@ namespace GammelGames
             string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "';";
             if (executeReader(pCommand).Length != 0)
             {
-                return false;
+                return false;   // falls es den nutzernamen gibt, kann kein neuer account erstellt werden
             }
             else
-            {
+            {   // falls nicht gibt es einen neuen Eintrag
                 pCommand = "INSERT INTO User (UserID, UserName, UserPassword) VALUES ( NULL, '" + pUsername + "', '" + pPassword + "');";
                 executeQuarry(pCommand);
                 return true;
             }
 
         }
-
-        /*
-        private Int32 select(Int32 ClientID)
-        {
-            string pCommand = "SELECT ClientTime FROM " + datenbankName + " WHERE ClientID = " + ClientID;
-            return executeReader(pCommand);
-        }//                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           robert stinkt                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       hart                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    nach                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        kartoffelsnack                                
-
-
-        private Int32 insert(Int32 ClientID, Int32 Zeit)
-        {
-            string pCommand = "INSERT " + datenbankName + " (ClientID, ClientTime) VALUES (" + ClientID + ", " + Zeit + ")";
-            return executeQuarry(pCommand);
-        }
-
-
-        private Int32 insert(Int32 ClientID, Int32 Zeit, String ClientName)
-        {
-            string pCommand = "INSERT " + datenbankName + " (ClientID, ClientTime, ClientName) VALUES (" + ClientID + ", " + Zeit + ", '" + ClientName + "')";
-            //Console.WriteLine(pCommand); 
-            return executeQuarry(pCommand);
-        }
-
-
-        private Int32 update(Int32 ClientID, Int32 Zeit)
-        {
-            string pCommand = "UPDATE " + datenbankName + " SET ClientTime = " + Zeit + " WHERE ClientID = " + ClientID;
-            return executeQuarry(pCommand);
-        }
-        */
 
         private Int32 executeQuarry(string sCommand)
         {
@@ -132,30 +101,33 @@ namespace GammelGames
             try
             {
                 conn.Open();
+
+                MySqlCommand command = new MySqlCommand(sCommand, conn);
+
+                List<String> data = new List<string>();
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+                        data.Add(Convert.ToString(reader[0]));
+                    }
+                    conn.Close();
+                    return data.ToArray();
+                }
             }
             catch
             {
                 MessageBox.Show("keine Verbindung möglich!");
+                return null;
             }
 
 
 
 
 
-            MySqlCommand command = new MySqlCommand(sCommand, conn);
-
-            List<String> data = new List<string>();
-
-            using (MySqlDataReader reader = command.ExecuteReader())
-            {
-                
-                while (reader.Read())
-                {
-                    data.Add(Convert.ToString(reader[0]));
-                }
-                conn.Close();
-                return data.ToArray();
-            }
+            
         }
     }
 }

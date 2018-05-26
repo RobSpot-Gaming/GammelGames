@@ -42,21 +42,21 @@
             this.txt_passwort.Location = new System.Drawing.Point(78, 53);
             this.txt_passwort.Name = "txt_passwort";
             this.txt_passwort.Size = new System.Drawing.Size(100, 20);
-            this.txt_passwort.TabIndex = 0;
+            this.txt_passwort.TabIndex = 1;
             // 
             // txt_nickname
             // 
             this.txt_nickname.Location = new System.Drawing.Point(78, 30);
             this.txt_nickname.Name = "txt_nickname";
             this.txt_nickname.Size = new System.Drawing.Size(100, 20);
-            this.txt_nickname.TabIndex = 2;
+            this.txt_nickname.TabIndex = 0;
             // 
             // btn_anmelden
             // 
             this.btn_anmelden.Location = new System.Drawing.Point(12, 114);
             this.btn_anmelden.Name = "btn_anmelden";
             this.btn_anmelden.Size = new System.Drawing.Size(75, 23);
-            this.btn_anmelden.TabIndex = 3;
+            this.btn_anmelden.TabIndex = 2;
             this.btn_anmelden.Text = "Anmelden";
             this.btn_anmelden.UseVisualStyleBackColor = true;
             this.btn_anmelden.Click += new System.EventHandler(this.btn_anmelden_Click);
@@ -66,7 +66,7 @@
             this.btn_registrieren.Location = new System.Drawing.Point(12, 143);
             this.btn_registrieren.Name = "btn_registrieren";
             this.btn_registrieren.Size = new System.Drawing.Size(75, 23);
-            this.btn_registrieren.TabIndex = 4;
+            this.btn_registrieren.TabIndex = 3;
             this.btn_registrieren.Text = "Registrieren";
             this.btn_registrieren.UseVisualStyleBackColor = true;
             this.btn_registrieren.Click += new System.EventHandler(this.btn_registrieren_Click);
