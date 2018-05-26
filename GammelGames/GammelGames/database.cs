@@ -21,34 +21,48 @@ namespace GammelGames
             /*conn = new MySqlConnection(ConnectionString); //  "Data Source = localhost; Database = stasibot; Uid = levelbot; Pwd = MhsUgUeuQuqadAlh;" 
             datenbankName = DatenbankName;*/
             datenbankName = "GammelGames";
-            conn = new MySqlConnection("Database=StasiBot;Data Source=localhost;User Id = root;");//Database=StasiBot;Data Source=localhost;User Id = root
+            conn = new MySqlConnection("Data Source=localhost;User Id = root; SslMode=none;");//Database=StasiBot;Data Source=localhost;User Id = root
             createDatabase();
         }
 
         private void createDatabase()
         {
-            string pCommand = "CREATE DATABASE " + datenbankName + ";";
-            executeQuarry(pCommand);
+            Boolean vorhanden = false;
+            string pCommand = "SHOW DATABASES;";
+            foreach (string dbname in executeReader(pCommand))
+            {
+                if (dbname == datenbankName)
+                {
+                    pCommand = "CREATE DATABASE " + datenbankName + ";";
+                    executeQuarry(pCommand);
 
-            
-            conn.Open();
-            conn.ChangeDatabase(datenbankName);
-            conn.Close();
-            pCommand = "CREATE TABLE `User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
+                    conn.Open();
+                    conn.ChangeDatabase(datenbankName);
+                    conn.Close();
+                    pCommand = "CREATE TABLE `gammelgames`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
 
-            executeQuarry(pCommand);
+                    executeQuarry(pCommand);
+                    vorhanden = true;
+                }
+            }
+            if(vorhanden == false)
+            {
+                conn.Open();
+                conn.ChangeDatabase(datenbankName);
+                conn.Close();
+            }
         }
 
         public Boolean login(string pUsername, string pPassword)
         {
             string pCommand = "SELECT UserID From " + datenbankName + " Where UserName = " + pUsername + " AND UserPassword = " + pPassword + ";";
-            return executeReader(pCommand) > 0;
+            return executeReader(pCommand)[0] != "0";
         }
 
         public Boolean registrieren(string pUsername, string pPassword)
         {
             string pCommand = "SELECT UserID From " + datenbankName + " WHERE UserName = " + pUsername + ";";
-            if(executeReader(pCommand) > 0)
+            if (executeReader(pCommand)[0] == "0")
             {
                 return false;
             }
@@ -112,10 +126,8 @@ namespace GammelGames
         }
 
 
-        private Int32 executeReader(string sCommand)
+        private String[] executeReader(string sCommand)
         {
-            Int32 Data = -1;
-
 
             try
             {
@@ -132,17 +144,18 @@ namespace GammelGames
 
             MySqlCommand command = new MySqlCommand(sCommand, conn);
 
+            List<String> data = new List<string>();
 
             using (MySqlDataReader reader = command.ExecuteReader())
             {
+                
                 while (reader.Read())
                 {
-                    Data = Convert.ToInt32(reader[0]);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+                    data.Add(Convert.ToString(reader[0]));
                 }
                 conn.Close();
-                return Data;
+                return data.ToArray();
             }
         }
     }
 }
-
