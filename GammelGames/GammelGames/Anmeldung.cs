@@ -17,6 +17,7 @@ namespace GammelGames
         public Anmeldung(Steuerung pSteuerung)
         {
             dieSteuerung = pSteuerung;
+            
             InitializeComponent();
         }
 

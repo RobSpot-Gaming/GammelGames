@@ -15,7 +15,7 @@ namespace GammelGames
 
         private string datenbankName;
         private MySqlConnection conn;
-        public database(/*string ConnectionString, string DatenbankName*/)
+        public database()
         {
             datenbankName = "gammelgames";
             conn = new MySqlConnection("Data Source=localhost;User Id = root; SslMode=none;"); //Verbindungsstring zur lokalen MySQL Datenbank, ohne ssl Verschlüsselung
@@ -39,42 +39,28 @@ namespace GammelGames
                 pCommand = "CREATE DATABASE " + datenbankName + ";";
                 executeQuarry(pCommand);
 
-                conn.ChangeDatabase(datenbankName); // und in sie gewechselt
                 pCommand = "CREATE TABLE `" + datenbankName + "`.`User` ( `UserID` INT NOT NULL AUTO_INCREMENT, `UserName` VARCHAR(255) NOT NULL, `UserPassword` VARCHAR(255) NOT NULL, PRIMARY KEY(`UserID`)) ENGINE = InnoDB;";
-
                 executeQuarry(pCommand);
-            }
-            else
-            {                               // ansonsten nur gewechselt
-                conn.Open();
-                conn.ChangeDatabase(datenbankName);
-                conn.Close();
-            }
-        }
 
-        public Boolean login(string pUsername, string pPassword)
-        {
-            string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "' AND UserPassword = '" + pPassword + "';";
-            return executeReader(pCommand).Length != 0; // falls das Array keine Einträge hat, gibt es den benutzer nicht
-        }
-
-        public Boolean registrieren(string pUsername, string pPassword)
-        {
-            string pCommand = "SELECT UserID FROM User WHERE UserName = '" + pUsername + "';";
-            if (executeReader(pCommand).Length != 0)
-            {
-                return false;   // falls es den nutzernamen gibt, kann kein neuer account erstellt werden
-            }
-            else
-            {   // falls nicht gibt es einen neuen Eintrag
-                pCommand = "INSERT INTO User (UserID, UserName, UserPassword) VALUES ( NULL, '" + pUsername + "', '" + pPassword + "');";
+                pCommand = "CREATE TABLE `" + datenbankName + "`.`Freundesliste` ( `ListID` INT NOT NULL AUTO_INCREMENT, `UserID` INT(11) NOT NULL, `FreundID` INT(11) NOT NULL, PRIMARY KEY(`ListID`)) ENGINE = InnoDB;";
                 executeQuarry(pCommand);
-                return true;
-            }
 
+                pCommand = "CREATE TABLE `" + datenbankName + "`.`bibliothek` ( `BibID` INT(11) NOT NULL AUTO_INCREMENT , `UserID` INT(11) NOT NULL , `SpielID` INT(11) NOT NULL , PRIMARY KEY (`BibID`)) ENGINE = InnoDB;";
+                executeQuarry(pCommand);
+
+                pCommand = "CREATE TABLE `" + datenbankName + "`.`spiel` ( `SpielID` INT NOT NULL AUTO_INCREMENT, `SpielTitel` VARCHAR(255) NOT NULL, `SpielBeschreibung` TEXT NULL, PRIMARY KEY(`SpielID`)) ENGINE = InnoDB;";
+                executeQuarry(pCommand);
+            }                             // und in sie gewechselt
+
+            conn.Open();
+            conn.ChangeDatabase(datenbankName);
+            conn.Close();
+            
         }
 
-        private Int32 executeQuarry(string sCommand)
+        
+
+        public Int32 executeQuarry(string sCommand) // Fuehrt ein SQL Befehl aus
         {
             Int32 anzahlZeilen = -1;
             try
@@ -94,8 +80,7 @@ namespace GammelGames
             return anzahlZeilen;
         }
 
-
-        private String[] executeReader(string sCommand)
+        public String[] executeReader(string sCommand)  // Fuehrt ein SQL Befehl mit reader aus, die Rueckgabe wird uebergeben (SELECT befehl)
         {
 
             try
@@ -108,10 +93,10 @@ namespace GammelGames
 
                 using (MySqlDataReader reader = command.ExecuteReader())
                 {
-
                     while (reader.Read())
                     {
-                        data.Add(Convert.ToString(reader[0]));
+                        for(int i = 0; i < reader.FieldCount; i++)
+                            data.Add(Convert.ToString(reader[i]));
                     }
                     conn.Close();
                     return data.ToArray();
@@ -122,12 +107,6 @@ namespace GammelGames
                 MessageBox.Show("keine Verbindung möglich!");
                 return null;
             }
-
-
-
-
-
-            
         }
     }
 }

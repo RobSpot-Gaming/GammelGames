@@ -8,11 +8,37 @@ namespace GammelGames
 {
     class user
     {
-        string ID;
-        string Name;
-        string NickName;
-        string Email;
-        Enumerationen.EnmSpielerZustand Status;
+        Int32 aID;
+        string aName;
+        string aNickName;
+        string aEmail;
+        Enumerationen.EnmSpielerZustand aStatus;
+
+        public string AName
+        {
+            get
+            {
+                return aName;
+            }
+
+            set
+            {
+                aName = value;
+            }
+        }
+
+        public Int32 AID
+        {
+            get
+            {
+                return aID;
+            }
+
+            set
+            {
+                aID = value;
+            }
+        }
 
 
         /// <summary>
@@ -22,14 +48,21 @@ namespace GammelGames
         /// <param name="pName">Anzeigename des Users</param>
         /// <param name="pNickName">Anmelde-Nickname des Users</param>
         /// <param name="pEmail">E-Mail Adresse des Users</param>
-        public user(string pID, string pName, string pNickName, string pEmail)
+        /// 
+        //public user(string pID, string pName, string pNickName, string pEmail)
+        public user(string pName, Int32 pID)
         {
-            ID = pID;
-            Name = pName;
-            NickName = pNickName;
-            Email = pEmail;
-            Status = Enumerationen.EnmSpielerZustand.eOnline;
+            aID = pID;
+            aName = pName;
+            //aNickName = pNickName;
+            //Email = pEmail;
+            aStatus = Enumerationen.EnmSpielerZustand.eOnline;
 
+        }
+
+        public user(string pName)
+        {
+            aName = pName;
         }
     }
 }

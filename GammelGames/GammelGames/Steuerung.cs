@@ -10,10 +10,9 @@ namespace GammelGames
     public class Steuerung
     {
         private Form dieOberflaeche;
-        private database dieDatabase;
-
-        private string name;
-        private string passwort;
+        private DatenbankVerwaltung dieDatenbank;
+        private user identety;
+        
 
         public Steuerung()
         { 
@@ -23,16 +22,15 @@ namespace GammelGames
             dieOberflaeche = new Anmeldung(this);
             dieOberflaeche.Show();
 
-            dieDatabase = new database();
+            dieDatenbank = new DatenbankVerwaltung();
         }
 
         public Boolean anmelden(string pNickname, string pPassword)
         {
-            if(dieDatabase.login(pNickname, pPassword))
+            Int32 id = dieDatenbank.login(pNickname, pPassword);
+            if (id != 0)
             {
-                name = pNickname;
-                passwort = pPassword;
-
+                identety = new user(pNickname, id);
                 return true;
             }
             else
@@ -43,10 +41,11 @@ namespace GammelGames
 
         public Boolean registrieren(string pNickname, string pPassword)
         {
-            if(dieDatabase.registrieren(pNickname, pPassword))
+            // eigentlich noch hashen
+            if(dieDatenbank.registrieren(pNickname, pPassword))
             {
-                name = pNickname;
-                passwort = pPassword;
+                Int32 id = dieDatenbank.giveUserID(pNickname);
+                identety = new user(pNickname, id);
                 return true;
             }
             else
@@ -57,8 +56,39 @@ namespace GammelGames
 
         public void angemeldet()
         {
-            dieOberflaeche = new Form1();
+            dieOberflaeche = new Startseite(this, identety.AName);
             dieOberflaeche.Show();
+        }
+
+
+        public string[] freundesuche(string pSuche) // sucht nach User
+        {
+            return dieDatenbank.freundesuche(pSuche);
+        }
+
+        public void freundhinzufuegen(string pFreund)   // gibt Freunde zurueck
+        {
+            dieDatenbank.feundhinzufuegen(identety.AName, pFreund);
+        }
+
+        public string[] ladeFreunde()
+        {
+            return dieDatenbank.loadfriends(identety.AID);
+        }
+
+        public Spiel[] sucheSpiel(String SpielName)
+        {
+            return dieDatenbank.sucheSpiel(SpielName);
+        }
+
+        public Spiel[] ladeBibliothek()
+        {
+            return dieDatenbank.ladeBibliothek(identety.AID);
+        }
+
+        public void spielHinzufuegen(Int32 SpielID)
+        {
+            dieDatenbank.hinzufuegenSpiel(identety.AID, SpielID);
         }
     }
 }
